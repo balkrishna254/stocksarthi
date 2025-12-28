@@ -223,7 +223,7 @@ function downloadPDF() {
    TOOLS
 ===================== */
 function openTradingNotes() {
-  window.open("notes/Stock_Sarthi_Candlestick_Premium.pdf", "_blank");
+  window.open("Stock_Sarthi_Candlestick_CLEAN_NO_KABIR.pdf", "_blank");
 }
 function openMarketNews() {
   window.open("news.html", "_blank");
@@ -234,3 +234,4 @@ function openSuccess() {
 function openFutureAnalysis() {
   window.open("future.html", "_blank");
 }
+
