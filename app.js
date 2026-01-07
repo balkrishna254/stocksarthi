@@ -35,7 +35,7 @@ function setProfile(p) {
 ===================== */
 function analyzeStock() {
   if (!selectedProfile) {
-    alert("Please select a profile first (Student / Trader / Investor)");
+    alert("Please select a profile first");
     return;
   }
 
@@ -48,31 +48,56 @@ function analyzeStock() {
     return;
   }
 
+  /* =====================
+     STEP 1: PRIMARY MATCH
+  ===================== */
   let candidates = STOCKS.filter(s =>
     s.risk === risk &&
     s.horizon.includes(horizon) &&
-    amount >= s.minAmount
+    (selectedProfile === "Investor" || amount >= s.minAmount)
   );
 
+  /* =====================
+     STEP 2: RELAX RULES (fallback)
+  ===================== */
+  let note = "";
   if (candidates.length === 0) {
-    document.getElementById("stockResult").innerHTML =
-      `<b>No suitable stocks found.</b><br>
-       Your investment amount (₹${amount}) is lower than the minimum required
-       for ${risk} risk stocks in ${horizon} term.`;
-    return;
+    candidates = STOCKS.filter(s => s.risk === risk);
+
+    note =
+      "⚠️ Based on your amount, we have adjusted the selection to show the closest suitable opportunity.";
+  }
+
+  /* =====================
+     STEP 3: FINAL SAFETY
+  ===================== */
+  if (candidates.length === 0) {
+    candidates = STOCKS; // ABSOLUTE fallback
+    note =
+      "⚠️ Showing a general market opportunity for learning purposes.";
   }
 
   const stock = candidates[Math.floor(Math.random() * candidates.length)];
 
+  /* =====================
+     RISK SCORE
+  ===================== */
   let base =
-    risk === "Low" ? 25 :
+    risk === "Low" ? 30 :
     risk === "Medium" ? 55 : 80;
 
-  let timeAdj =
+  let horizonAdj =
     horizon === "Long" ? -10 :
     horizon === "Short" ? 10 : 0;
 
-  let riskScore = Math.min(95, Math.max(5, base + timeAdj));
+  let amountAdj =
+    amount >= 500000 ? -10 :
+    amount <= 20000 ? 10 : 0;
+
+  let riskScore = Math.min(
+    95,
+    Math.max(5, base + horizonAdj + amountAdj)
+  );
 
   window.lastAnalysis = {
     stock,
@@ -83,30 +108,29 @@ function analyzeStock() {
     riskScore
   };
 
+  /* =====================
+     UI OUTPUT
+  ===================== */
   document.getElementById("stockResult").innerHTML = `
-    <b>Profile Selected:</b> ${selectedProfile}<br>
+    <b>Profile:</b> ${selectedProfile}<br>
     <b>Time Horizon:</b> ${horizon}<br>
     <b>Risk Appetite:</b> ${risk}<br>
-    <b>Your Investment Amount:</b> Rs. ${amount}<br>
-    <b>Minimum Required:</b> Rs. ${stock.minAmount}+<br><br>
+    <b>Investment Amount:</b> ₹${amount.toLocaleString()}<br><br>
 
     <b>📈 Suggested Stock</b><br>
     <b>Name:</b> ${stock.name}<br>
     <b>Sector:</b> ${stock.sector}<br><br>
 
-    <b>📊 Risk Meter:</b> ${riskScore}/100
+    <b>📊 Risk Score:</b> ${riskScore}/100
     <div class="risk-bar-bg">
       <div class="risk-bar-fill" id="riskFill"></div>
     </div>
 
-    <p style="margin-top:8px;">
-      This stock aligns with your <b>${risk}</b> risk appetite and
-      <b>${horizon}</b> investment horizon.
-    </p>
+    ${note ? `<p style="margin-top:8px;color:#c47a00;">${note}</p>` : ""}
 
     <hr>
     <small style="color:#666">
-      ⚠️ Disclaimer: Educational purpose only. Please do your own research.
+      ⚠️ Educational purpose only. Stock Sarthi is not a SEBI registered advisor.
     </small>
   `;
 
@@ -121,6 +145,7 @@ function analyzeStock() {
   }, 100);
 }
 
+ 
 /* =====================
    SIP CALCULATOR
 ===================== */
@@ -223,7 +248,8 @@ function downloadPDF() {
    TOOLS
 ===================== */
 function openTradingNotes() {
-  window.open("Stock_Sarthi_Candlestick_CLEAN_NO_KABIR.pdf", "_blank");
+  const url = `${window.location.origin}/notes/trading.pdf`;
+  window.open(url, "_blank");
 }
 function openMarketNews() {
   window.open("news.html", "_blank");
