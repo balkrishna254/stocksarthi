@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Sarthi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="app">
+
+  <img src="logo.png" class="logo">
+  <h2>Stock Sarthi</h2>
+
+  <!-- PROFILE -->
+  <!-- Profile Section -->
+<p class="choose-profile">Choose Profile</p>
+
+<button onclick="setProfile('Student')">Student</button>
+<button onclick="setProfile('Trader')">Trader</button>
+<button onclick="setProfile('Investor')">Investor</button>
+
+<div id="profileInfo"></div>
+
+  <!-- FILTERS -->
+  <select id="timeHorizon">
+    <option value="Short">Short Term</option>
+    <option value="Mid">Mid Term</option>
+    <option value="Long">Long Term</option>
+  </select>
+
+  <select id="riskLevel">
+    <option value="Low">Low Risk</option>
+    <option value="Medium">Medium Risk</option>
+    <option value="High">High Risk</option>
+  </select>
+
+  <input id="investAmount" placeholder="Investment Amount (₹)">
+
+  <button onclick="analyzeStock()">Find Stock</button>
+
+  <div id="stockResult"></div>
+
+  <hr>
+
+  <!-- SIP -->
+  <h3>SIP Calculator</h3>
+  <input id="sipAmount" placeholder="Monthly SIP">
+  <input id="sipYears" placeholder="Years">
+  <input id="sipReturn" placeholder="Return %">
+
+  <button onclick="calculateSIP()">Calculate SIP</button>
+  <div id="sipResult"></div>
+  <canvas id="sipChart"></canvas>
+
+  <button onclick="downloadPDF()">Download PDF</button>
+
+  <hr>
+
+<!-- Tools -->
+<h3>Tools</h3>
+<button onclick="openTradingNotes()">Stock Sarthi Trading Notes</button>
+<button onclick="window.location.href='news.html'">
+  📰 Stock Market News
+</button>
+<button onclick="openSuccess()">Our Successful Picks</button>
+<button onclick="openFutureAnalysis()">🔮 Future Stock Analysis</button>
+
+<h3>About & Support</h3>
+
+<p style="font-size:14px; line-height:1.6; color:#333;">
+Stock Sarthi is an educational platform designed to help users understand
+stock market concepts through logic-based analysis.
+</p>
+
+<p style="font-size:14px; line-height:1.8;">
+📧 <a href="mailto:stocksarthi.official@gmail.com">
+stocksarthi.official@gmail.com
+</a><br><br>
+
+🐦 <a href="https://x.com/stocksarthi_app" target="_blank">
+@stocksarthi_app
+</a><br><br>
+
+📢 <a href="https://t.me/stocksarthiofficial" target="_blank">
+@stocksarthiofficial
+</a>
+</p>
+
+
+</div>
+
+<script src="stocks.js"></script>
+<script src="app.js"></script>
+<script src="futureEngine.js"></script>
+</body>
+</html>
